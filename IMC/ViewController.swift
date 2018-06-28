@@ -10,16 +10,52 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+    @IBOutlet weak var weight: UITextField!
+    @IBOutlet weak var height: UITextField!
+    @IBOutlet weak var result: UILabel!
+    @IBOutlet weak var resultImage: UIImageView!
+    @IBOutlet weak var resultSectionToShow: UIView!
+    
+    var imc: Double = 0
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @IBAction func calculate(_ sender: Any) {
+        if let weightToCalculate = Double(weight.text!), let heightToCalculate = Double(height.text!) {
+            imc = weightToCalculate / pow(heightToCalculate, 2)
+            showCalculatedResults()
+        }
     }
-
-
+    
+    func showCalculatedResults() {
+        var resultToShow  : String = ""
+        var imageToShow   : String = ""
+        
+        switch imc {
+            case 0..<16:
+                resultToShow  = "Magreza"
+                imageToShow   = "magreza"
+            case 16..<18.5:
+                resultToShow  = "Abaixo do peso"
+                imageToShow   = "abaixo"
+            case 18.5..<25:
+                resultToShow  = "Peso ideal"
+                imageToShow   = "ideal"
+            case 25..<30:
+                resultToShow  = "Sobrepeso"
+                imageToShow   = "sobrepeso"
+            default:
+                resultToShow  = "Obesidade"
+                imageToShow   = "obesidade"
+        }
+        
+        result.text                     = "\(Int(imc)): \(resultToShow)"
+        resultImage.image               = UIImage(named: imageToShow)
+        resultSectionToShow.isHidden    = false
+        view.endEditing(true)
+    }
+    
 }
 
